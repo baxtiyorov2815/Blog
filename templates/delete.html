@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="container p-5 my-5 bg-dark text-white">
+        <h1> Are sure to delete {{ post.title }}? </h1>
+        <form action="", method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-info"><a href="{% url 'detail' post.id %}"> Back </a></button>
+            <button type="submit" class="btn btn-outline-danger">Yes</button>
+        </form>
+    </div>
+{% endblock content %}

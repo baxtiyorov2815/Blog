@@ -1,5 +1,19 @@
 {% extends 'base.html' %}
-
+{% load static %}  
+    
+{% block genres %}
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle text-info" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Genres
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <li><a class="dropdown-item" href="{% url 'home' %}">All</a></li>
+        {% for genre in genres %}
+            <li><a class="dropdown-item" href="{% url 'home' %}?q={{ genre.title }}">{{genre}}</a></li>
+        {% endfor %}
+    </ul>
+</li>
+{% endblock genres %}
 {% block content %}
 
 
@@ -11,7 +25,7 @@
                         <div class="card-body">
                             <img src="{{ post.image }}" class="card-img-top">
                             <h5 class="card-title">{{ post.title }}</h5>
-                            <p class="card-text">{{ post.desc }}</p>
+                            <p class="card-text">{{ post.desc|truncatechars:30 }}</p>
                             <p class="card-text">{{ post.created }}</p>
                             <p class="card-text">{{ post.updated }}</p>
                             <a href="{% url 'detail' post.id %}" class="btn btn-primary">Read more</a>
@@ -21,5 +35,4 @@
                 {% endfor %}
             </div>
 </div>
-    
 {% endblock content %}

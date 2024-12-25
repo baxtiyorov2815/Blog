@@ -1,10 +1,13 @@
 {% load bootstrap5 %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog site</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+      
 </head>
 <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-dark">
@@ -18,6 +21,18 @@
                   <li class="nav-item">
                     <a class="nav-link active text-info" aria-current="page" href="{% url 'home' %}">Home</a>
                   </li>
+                  {% block genres %}
+                    
+                  {% endblock genres %}
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-info" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Add new
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{% url 'newgenre' %}">Genre</a></li>
+                        <li><a class="dropdown-item" href="{% url 'newpost' %}">Post</a></li>
+                    </ul>
+                </li>
                   <li class="nav-item">
                     <a class="nav-link active text-info" aria-current="page" href="#">Sign in</a>
                   </li>
@@ -25,8 +40,8 @@
                     <a class="nav-link active text-info" aria-current="page" href="#">Sign up</a>
                   </li>
                 </ul>
-                <form class="d-flex">
-                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <form class="d-flex" method="get" action="{% url 'home' %}">
+                  <input class="form-control me-2" name="q" type="search" placeholder="Search" aria-label="Search">
                   <button class="btn btn-outline-danger" type="submit">Search</button>
                 </form>
               </div>
