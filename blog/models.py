@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Genre(models.Model):
     title = models.CharField(max_length=250)
@@ -7,10 +8,13 @@ class Genre(models.Model):
         return self.title
 
 class Post(models.Model):
+    author = models.ForeignKey(to=User,
+                               on_delete=models.CASCADE)
     title = models.CharField(max_length=250)
     desc = models.TextField()
     image = models.ImageField(upload_to='media/')
-    genre = models.ForeignKey(to=Genre, on_delete=models.CASCADE)
+    genre = models.ForeignKey(to=Genre, 
+                              on_delete=models.CASCADE)
     created = models.DateField(auto_now=True)
     updated = models.DateField(auto_now_add=True)
 

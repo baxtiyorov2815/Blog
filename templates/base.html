@@ -34,12 +34,23 @@
                         <li><a class="dropdown-item" href="{% url 'newpost' %}">Post</a></li>
                     </ul>
                 </li>
-                  <li class="nav-item">
-                    <a class="nav-link active text-info" aria-current="page" href="{% url 'login' %}">Login</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link active text-info" aria-current="page" href="#">Sign up</a>
-                  </li>
+                  
+                  {% if user.is_authenticated %}
+                    <li class="nav-item">
+                      <a class="nav-link active text-info" aria-current="page" href="#">{{ user.username }}</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link active text-info" aria-current="page" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                  {% else %}
+                    <li class="nav-item">
+                      <a class="nav-link active text-info" aria-current="page" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link active text-info" aria-current="page" href="{% url 'register' %}">Register</a>
+                    </li>
+                  {% endif %}
+              
                 </ul>
                 <form class="d-flex" method="get" action="{% url 'home' %}">
                   <input class="form-control me-2" name="q" type="search" placeholder="Search" aria-label="Search">

@@ -61,7 +61,7 @@ class DetailPostView(View):
                       template_name="detail.html",
                       context=context)
     
-class EditPostView(View):
+class EditPostView(View, LoginRequiredMixin):
     def get(self, request, pk):
         post = Post.objects.get(id=pk)
         form = PostForm(instance=post)
@@ -77,7 +77,7 @@ class EditPostView(View):
             form.save
             return redirect('home')
         
-class DeletePostView(View):
+class DeletePostView(View, LoginRequiredMixin):
     def get(self, request, pk):
         post = Post.objects.get(id=pk)
         context = {"post": post}
@@ -90,7 +90,7 @@ class DeletePostView(View):
         post.delete()
         return redirect('home')
     
-class CreateNewGenre(View):
+class CreateNewGenre(View, LoginRequiredMixin):
     def get(self, request):
         form = GenreForm()
         context = {'form': form}
@@ -104,7 +104,7 @@ class CreateNewGenre(View):
             form.save()
             return redirect('home')
         
-class CreateNewPost(View):
+class CreateNewPost(View, LoginRequiredMixin):
     def get(self, request):
         form = PostForm()
         context = {"form": form}
@@ -115,7 +115,10 @@ class CreateNewPost(View):
     def post(self, request):
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
             return redirect('home')
-        # else:
-        #     return render(request, reverse(), {'form': form})
+        else:
+            form = PostForm()
+            return render(request, reverse(), {'form': form})

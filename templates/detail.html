@@ -16,8 +16,11 @@
             </p>
             <p>{{ post.created }}</p>
             <p>{{ post.updated }}</p>
-            <a href="{% url 'edit' post.id %}" class="btn btn-warning">Edit</a>
-            <a href="{% url 'delete' post.id %}" class="btn btn-danger">Delete</a>
+            
+            {% if user == post.author %}
+                <a href="{% url 'edit' post.id %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'delete' post.id %}" class="btn btn-danger">Delete</a>
+            {% endif %}
         </div>
     </div>
 </div>
