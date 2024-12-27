@@ -106,11 +106,11 @@ class CreateNewGenre(View, LoginRequiredMixin):
         
 class CreateNewPost(View, LoginRequiredMixin):
     def get(self, request):
-        form = PostForm()
-        context = {"form": form}
-        return render(request=request,
-                      template_name='newpost.html',
-                      context=context)
+            form = PostForm()
+            context = {"form": form}
+            return render(request=request,
+                        template_name='newpost.html',
+                        context=context)
     
     def post(self, request):
         form = PostForm(request.POST, request.FILES)

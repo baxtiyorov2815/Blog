@@ -15,9 +15,17 @@
             <div class="form">
                 <form class="register-form" action="" method="post">
                     {% csrf_token %}
+                    {% if message1 %}
+                        <li style="color: red;">{{ message1 }}</li>
+                    {% endif %}
                     <input type="text" name="username" placeholder="username"/>
                     <input type="text" name="email" placeholder="email address"/>
                     <input type="password" name="password1" placeholder="password"/>
+                    
+                    {% if message %}
+                        <li style="color: red;">{{ message }}</li>
+                    {% endif %}
+                        
                     <input type="password" name="password2" placeholder="Re enter password">
                     <button type="submit">create</button>
                     <p class="message">Already registered? <a href="{% url 'login' %}">Sign In</a></p>
