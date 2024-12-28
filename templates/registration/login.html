@@ -1,16 +1,17 @@
+{% load bootstrap5 %}
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link href='{% static "css/login.css" %}' rel='stylesheet'>
-
+  <title>Log in</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
-
-<div class="login-page">
+  {% include '../messages.html' %}
+  <div class="login-page">
     <div class="form">
       
       <form class="login-form" action="" method="post">
@@ -22,5 +23,7 @@
       </form>
     </div>
   </div>
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
 </body>
 </html>

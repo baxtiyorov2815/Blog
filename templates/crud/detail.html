@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <h1 class="text-center text-danger">{{ post.title }}</h1>
+        <div class="col-md-4">
+            {% if post.image %}
+            <img src="{{ post.image.url }}" alt="" width="320" height="350">
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <h6>{{ post.genre }}</h6>
+            <p>
+                {{ post.desc }}
+            </p>
+            <p>{{ post.created }}</p>
+            <p>{{ post.updated }}</p>
+            
+            
+            {% if user.is_active %}
+                {% if user == post.author or user.is_superuser %}
+                    <a href="{% url 'edit' post.id %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url 'delete' post.id %}" class="btn btn-danger">Delete</a>
+                {% endif %}
+                <form action="" method="get">
+                    <br>
+                    {% if user.is_staff %}
+                        <a href="{% url 'ban' post.author.id %}" class="btn btn-danger">Ban {{ post.author.username }}</a>
+                    {% endif %}
+                </form>
+            {% endif %}
+                
+                
+        </div>
+    </div>
+</div>
+{% endblock content %}
