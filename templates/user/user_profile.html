@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+<section style="background-color: #eee;">
+    <div class="container py-5">
+      <div class="row">
+      </div>
+  
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body text-center bg-dark">
+                
+                {% if userprofile.pro_picture %}
+                <img src="{{ userprofile.pro_picture.url }}" alt="avatar"
+                class="rounded-circle img-fluid" style="width: 150px;">
+                {% else %}
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+              class="rounded-circle img-fluid" style="width: 150px;">
+
+                {% endif %}
+              <h5 class="my-3">{{ userprofile.user.username }}</h5>
+              <p class="text-muted mb-4">{{ userprofile.address }}</p>
+              <p class="text-muted mb-4">{{ userprofile.followers.count }} followers</p>
+              
+              {% if user in userprofile.followers.all %}
+              <form action="{% url 'unfollow_user' userprofile.user.username %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-primary">Unfollow</button>
+                  <button type="button" class="btn btn-outline-warning">Message</button>
+              </form>
+              {% else %}
+              <form action="{% url 'follow_user' userprofile.user.username %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-primary">Follow</button>
+                  <button type="button" class="btn btn-outline-warning">Message</button>
+              </form>
+              {% endif %}
+                
+            </div>
+          </div>
+          <div class="card mb-4 mb-lg-0 bg-dark">
+            <div class="card-body p-0">
+              <ul class="list-group list-group-flush rounded-3">
+                
+                {% if userprofile.web_url %}
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3 bg-dark">
+                  <img src="data:image/png;base64,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" alt="domain">
+                <i class="fas fa-globe fa-lg text-warning"></i>
+                <p class="mb-0 text-white">{{ userprofile.web_url }}</p>
+              </li>
+              {% else %}
+              <li class="list-group-item d-flex justify-content-between align-items-center p-3 bg-dark">
+                <img src="data:image/png;base64,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" alt="domain">
+              <i class="fas fa-globe fa-lg text-warning"></i>
+              <p class="mb-0 text-white"></p>
+            </li>
+                {% endif %}
+                  
+                
+                {% if user.github_url %}
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3 bg-dark">
+                  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC6UlEQVR4nO2WS0hUYRTHT6U9iIiwKFo0946iYtaUZqNCTKuiokUbU8xylm2Catq0KDBqE0SLiiBI0xZGREVUzgQNzffdMR+IZqbo+N4YZL56aOicONcZuTP3c+bO1V0dOJv5/t/53XvmPC7Af4thDvAmpYJSKAMvlYGfD3mpBXgBncFymwTMJgN/JAMblYGj2Nm3eY1v95KB6eDdLAOvloHNLQ7UPQBpq7ZDQ4opqBWUbBl4n3GgznspRsJQCdjEEqCqS8DGU4HtNASlFEnAAuHLJ2zteNDSYhh2KK0Vj2W1aVPfnwa+LXHBErAabaC6u1PY60F8d/8HFu37jFlr67FgaxMeyWjFo5ltWLitGbPW1ePpA53oq/ylamuvf49+oKqYUKrI6EJqefpHDZaIv3/wU1dwFlD2xgBTO0Smzl/zexnAnOCVQigNgFAvLohP7u/AXndiUPKAG7Eor0PX5w7RkAlNpAjxq9uTCUPD/vLWhO6tLcDyRWku1YoyVvuxuy5oGtzzNojpyf4IsBV8JaJqdmlFeSmNpqFhpxhR6b4oAPNLWlH2+volg6nNogaKSwe2guLUV/S0aahSMy2aZGd0YPrjo4VXy4ZMg6+cGhSAfXZhO0nAJrXCzDV+U5VNFU13I6F8Kheakw0PEKrua85hbH8xGxf46fksVpQPq3cEaX4ohM73MsuVgQVJeLl4AO+5vqJtw0f1YuoqRZ3NT26M6YD0G81u0oiXBwvGHJmht64mcdpKBe9cGMFnN8cXAlpXcGyqndGBG2tn1LPFtxYTj0ut0QqTgA/RBdvGBux6PYePK0ax2N6BTkdXAj278N8O0pcMGDEr+HfREqeL544HsPtN/AlGq1IAHjP1FSIDG6AAOZsasMT+Bc8e7jEMloANW4DvSQiqTTst8XDBUfD4YBakCjac3li2Az7kULByR+fIYmA6I03c6jVjXi8m9bnRHnBjeZ8HXeQBDzr7PZhPZ6aCwr9ifwHH6Ey/T9qOXAAAAABJRU5ErkJggg==" alt="github--v1">
+                  <i class="fab fa-github fa-lg text-body"></i>
+                <p class="mb-0 text-white">{{ userprofile.github_url }}</p>
+              </li>
+                {% else %}
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3 bg-dark">
+                  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC6UlEQVR4nO2WS0hUYRTHT6U9iIiwKFo0946iYtaUZqNCTKuiokUbU8xylm2Catq0KDBqE0SLiiBI0xZGREVUzgQNzffdMR+IZqbo+N4YZL56aOicONcZuTP3c+bO1V0dOJv5/t/53XvmPC7Af4thDvAmpYJSKAMvlYGfD3mpBXgBncFymwTMJgN/JAMblYGj2Nm3eY1v95KB6eDdLAOvloHNLQ7UPQBpq7ZDQ4opqBWUbBl4n3GgznspRsJQCdjEEqCqS8DGU4HtNASlFEnAAuHLJ2zteNDSYhh2KK0Vj2W1aVPfnwa+LXHBErAabaC6u1PY60F8d/8HFu37jFlr67FgaxMeyWjFo5ltWLitGbPW1ePpA53oq/ylamuvf49+oKqYUKrI6EJqefpHDZaIv3/wU1dwFlD2xgBTO0Smzl/zexnAnOCVQigNgFAvLohP7u/AXndiUPKAG7Eor0PX5w7RkAlNpAjxq9uTCUPD/vLWhO6tLcDyRWku1YoyVvuxuy5oGtzzNojpyf4IsBV8JaJqdmlFeSmNpqFhpxhR6b4oAPNLWlH2+volg6nNogaKSwe2guLUV/S0aahSMy2aZGd0YPrjo4VXy4ZMg6+cGhSAfXZhO0nAJrXCzDV+U5VNFU13I6F8Kheakw0PEKrua85hbH8xGxf46fksVpQPq3cEaX4ohM73MsuVgQVJeLl4AO+5vqJtw0f1YuoqRZ3NT26M6YD0G81u0oiXBwvGHJmht64mcdpKBe9cGMFnN8cXAlpXcGyqndGBG2tn1LPFtxYTj0ut0QqTgA/RBdvGBux6PYePK0ax2N6BTkdXAj278N8O0pcMGDEr+HfREqeL544HsPtN/AlGq1IAHjP1FSIDG6AAOZsasMT+Bc8e7jEMloANW4DvSQiqTTst8XDBUfD4YBakCjac3li2Az7kULByR+fIYmA6I03c6jVjXi8m9bnRHnBjeZ8HXeQBDzr7PZhPZ6aCwr9ifwHH6Ey/T9qOXAAAAABJRU5ErkJggg==" alt="github--v1">
+                  <i class="fab fa-github fa-lg text-body"></i>
+                <p class="mb-0 text-white"></p>
+              </li>
+                {% endif %}
+                  
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3 bg-dark">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAABy0lEQVR4nO2WPU9VQRCGx52jSDTEQisba2vBCmNBAdFEEyyMjTaE8BuAQiKJFaEzYEEics/sWFDx0dlrYukPMBZASDA7syEQYc16r0T5uGfvObeQ5L7JdLPvszNnJnsAOurov9a7cAVZBw3J06zm70AIF0r5ZOR7U3ON1REk3UGr4U8YK1+A3e0YSDKF5B8XO7G/iVb2DeuLBOjzv4H/BMnPxiVWgUM3cLjU1AxJBuqH5cCwjsPHkJ2aOBcuIunWmeC6hxorK0jyprD9Wc3fPd62jH3fiTz2fc2hR5HDQrhc1L16JVY3jhsYK58Nu7H4KX53Jpf7xVDRlgbNsDxDksMmpvFiXxPA35KhGbl7hvRDbHFiK88MY+VTMhjY3YhTXRXaqPhtOhjiZOtsW8DkhlsCw2roQqvvq0H1Byxu97QGhsZakc6gld1yYJmGMsJchypUuw1L7jqUlWEdL1ir0yo9xNw/gqrKyPciyXzcyUTwa2iLlneuIclLJNkr3ludLAfhgFnu+pH1gSE/iqQ1JJWEKr8juyfVKsx3b8XFR1KXMESbSPIKePMqtPWvIteH0RhJl4yVdUOyhqSLhnQiPhLxQWkfsKOOzrt+AZB410LUq5ByAAAAAElFTkSuQmCC" alt="twitter--v1">
+                  <i class="fab fa-twitter fa-lg" style="color: #55acee;"></i>
+                  
+                  {% if userprofile.twitter_url %}
+                  <p class="mb-0 text-white">{{ userprofile.twitter_url }}</p>
+                  {% else %}
+                  <p class="mb-0 text-white"></p>
+                  {% endif %}
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3 bg-dark">
+                    <img src="data:image/png;base64,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" alt="instagram-new">
+                  <i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i>
+                  
+                  {% if userprofile.insta_url %}
+                  <p class="mb-0 text-white">{{ userprofile.insta_url }}</p>
+                  {% else %}
+                  <p class="mb-0 text-white"></p>
+                  {% endif %}
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3 bg-dark">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAACDklEQVR4nO2Wz0sbQRTHlxmC5uhVz15EbaF/hDX2j/CPsGr/CFvEqmQmQQ8WRMFLD6aevBV6kcZCWzUJZt9bq6hR158xychsZGOazO4ku9Ae/MK7LDP74b33nXljGM/677SQ66QJc4RynCccUoTBthMcUpThHOVmTK4JDziVjxKOk5RhgXIUPnFKGE7IPYGYEQYvKYecBvCvgGyEm4NtQSk3Y5TBZetQF27TuDXcWqZJ80UwaA2un/lUPqpT3q5FS7xP2yJzURLFckXYxYqAy5IYWD2sX8sgo2U6wvGdHzSatMS3ozvRTK/WjhrWE47j/kdGw72jm4U6WLkiRO6i5GTfkPGj243pnQ4llzJ4o9O7T7vXLvTqviL6m8PqI+5htOpF4A/etG5d8Of9G12zfVT3l8GGzk++Htb6m/h1pQUmHFIexoIfrYL5T10wpj3AmFZtXM/Xyuul7qWD5mCG371K/SUIuHBXVmfMYF1tLo6zQcCyBcpyM5jxAJsx1caepQPRu/zHia3jogtbyVy73+UaNRiHvC8Qjqehu5rhiecFUu0zToQNJgkYMzSHRDZE8J7+yyRp9VEG58HBYEfi+QE96KPk3eoM87bBcq/12mhHEW4OynnaBniv5UwbtJDrlPP0qduVYIYnhMHbcF+b0zsd1fLj7Gr2Zn/3rHgr40Pa/i0nj1NWvyPzLOMf6AHfLRdzVFdfzgAAAABJRU5ErkJggg==" alt="facebook-new">
+                  <i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i>
+                  
+                  {% if userprofile.facebook_url %}
+                  <p class="mb-0 text-white">{{ userprofile.facebook_url }}</p>
+                  {% else %}
+                  <p class="mb-0 text-white"></p>
+                  {% endif %}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8">
+          <div class="card mb-4 bg-dark">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0 text-white">Full Name</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0 text-white">{{ userprofile.full_name }}</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0 text-white">Email</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0 text-white">{{ userprofile.user.email }}</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0 text-white">Phone</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{ userprofile.phone_number }}</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0 text-white">Mobile</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{ userprofile.mobile_number }}</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0 text-white">Address</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{ userprofile.adres }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+  </section>
+{% endblock content %}

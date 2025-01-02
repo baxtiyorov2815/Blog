@@ -1,29 +1,28 @@
-{% load bootstrap5 %}
+{% extends 'base.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Log in</title>
+
+
+{% block links %}
   <link rel="stylesheet" href="{% static 'css/login.css' %}">
-</head>
-<body>
-  {% include '../messages.html' %}
-  <div class="login-page">
-    <div class="form">
-      
-      <form class="login-form" action="" method="post">
-        {% csrf_token %}
-        <input type="text" name="username" placeholder="username"/>
-        <input type="password" name="password" placeholder="password"/>
-        <button>login</button>
-        <p class="message">Not registered? <a href="{% url 'register' %}">Create an account</a></p>
-      </form>
-    </div>
+{% endblock links %}
+
+
+    
+{% block content %}
+
+{% include '../messages.html' %}
+<div class="login-page">
+  <div class="form">
+    
+    <form class="login-form" action="" method="post">
+      {% csrf_token %}
+      <input type="text" name="username" placeholder="username"/>
+      <input type="password" name="password" placeholder="password"/>
+      <button>login</button>
+      <p class="message">Not registered? <a href="{% url 'register' %}">Create an account</a></p>
+    </form>
   </div>
-  {% bootstrap_css %}
-  {% bootstrap_javascript %}
-</body>
-</html>
+</div>
+
+{% endblock content %}

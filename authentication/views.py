@@ -1,12 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
-from .forms import RegistrationForm, UserForm
+from .forms import FollowUserForm, RegistrationForm, UserProfileFirstForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.messages import constants
+from .models import UserProfile, UserFollowersModel
 from django.contrib import messages
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class RegisterPageView(View):
     def get(self, request):
@@ -28,6 +28,8 @@ class RegisterPageView(View):
                                                 email=email,
                                                 password=password1)
                 user.save()
+                userprofile = UserProfile(user=user)
+                userprofile.save()
                 login(request=request,
                     user=user)
                 return redirect('home')
@@ -89,3 +91,44 @@ class LogoutPageView(View):
         user = request.user
         logout(request)
         return redirect('home')
+    
+class UserProfileView(View):
+    def get(self, request, username, *args, **kwargs):
+        user = User.objects.get(username=username)
+        userprofile = UserProfile.objects.filter(user=user)
+        print(userprofile[0].followers)
+        followed = userprofile[0].followers.filter(id=request.user.id).exists()
+        context = {
+            "userprofile": userprofile[0],
+            "followed": followed
+        }
+        return render(request, 'user/user_profile.html', context=context)
+    def post(self, request, *args, **kwargs):
+        pass
+
+class FollowUserView(LoginRequiredMixin, View):
+    def post(self, request, username, *args, **kwargs):
+        user_to_follow = get_object_or_404(User, username=username)
+        user_profile_to_follow = get_object_or_404(UserProfile, user=user_to_follow)
+
+        if user_to_follow != request.user:
+            user_profile_to_follow.followers.add(request.user)
+            messages.success(request, f'You are now following {user_to_follow.username}.')
+        else:
+            messages.error(request, "You cannot follow yourself!")
+
+        return redirect('userprofile', username=username)
+
+
+class UnfollowUserView(LoginRequiredMixin, View):
+    def post(self, request, username, *args, **kwargs):
+        user_to_unfollow = get_object_or_404(User, username=username)
+        user_profile_to_unfollow = get_object_or_404(UserProfile, user=user_to_unfollow)
+
+        if user_to_unfollow != request.user:
+            user_profile_to_unfollow.followers.remove(request.user)
+            messages.success(request, f'You have unfollowed {user_to_unfollow.username}.')
+        else:
+            messages.error(request, "You cannot unfollow yourself!")
+
+        return redirect('userprofile', username=username)
